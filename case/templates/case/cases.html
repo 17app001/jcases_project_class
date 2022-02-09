@@ -1,46 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        #cases-table td{
-            text-align: center;
-        }
+{% extends 'base.html' %}
 
-        #cases-table th{
-            background-color: black;
-            color: white;
-        }
-    </style>
-</head>
-<body>
-    <h1>Cases</h1>    
-    <div id="cases-table">
-        <table  border="1">
-            <thead>
-                <tr>
-                    <th>日期</th>
-                    <th>標題</th>
-                    <th>金額</th>
-                    <th>分類</th>
-                    <th>檢視</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for case in cases %}
-                <tr>
-                    <td>{{case.createdon}}</td>
-                    <td>{{case.title}}</td>
-                    <td>{{case.amount}}</td>
-                    <td>{{case.category}}</td>
-                    <td>{{case.view}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+{% block content %}
+<h1>Cases</h1>
+<div id="cases-table">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>日期</th>
+                <th>標題</th>
+                <th>金額</th>
+                <th>分類</th>
+                <th>檢視</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for case in cases %}
+            <tr>
+                <td>{{case.createdon}}</td>
+                <td>{{case.title}}</td>
+                <td>{{case.amount}}</td>
+                <td>{{case.category}}</td>
+                <td>{{case.view}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
