@@ -15,4 +15,11 @@
         <button type="submit">登入</button>
     </p>
 </form>
+<div id="message">
+    {% if message %}
+    <p style="color:red">{{message}}</p>
+    {% endif %}
+</div>
+
+
 {% endblock %}
