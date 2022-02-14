@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Register</h1>
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">註冊</button>
+</form>
+<div id="message">
+    {% if message %}
+    <p style="color:red">{{message}}</p>
+    {% endif %}
+</div>
+{% endblock %}
