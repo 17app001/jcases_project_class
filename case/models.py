@@ -67,7 +67,7 @@ class Case(models.Model):
     category = models.ForeignKey(Category, null=True,on_delete=SET_NULL)
     amount = models.ForeignKey(Amount, null=True, on_delete=SET_NULL)
     period = models.ForeignKey(Period, null=True, on_delete=SET_NULL)
-    state = models.ForeignKey(State, null=True, on_delete=SET_NULL)
+    state = models.ForeignKey(State, null=True, on_delete=SET_NULL,default='新進案')
     respondent = models.ManyToManyField(Respondent)   
     mode = models.ManyToManyField(Mode)
 
@@ -75,4 +75,4 @@ class Case(models.Model):
         ordering = ['-createdon']
 
     def __str__(self):
-        return self.title
+        return f'{self.id}-{self.title}'
