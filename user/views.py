@@ -8,8 +8,11 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url='login')
 def profile(request,id):
     user=Profile.objects.get(id=id)
-    print(user)
-    return render(request,'./user/profile.html',{'user':user})
+       
+    response=render(request,'./user/profile.html',{'user':user})
+    response.set_cookie('page','profile')
+
+    return response
 
 def user_register(request):    
     if request.method=='GET':

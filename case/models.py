@@ -70,6 +70,7 @@ class Case(models.Model):
     state = models.ForeignKey(State, null=True, on_delete=SET_NULL,default='新進案')
     respondent = models.ManyToManyField(Respondent)   
     mode = models.ManyToManyField(Mode)
+    updatedon = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-createdon']

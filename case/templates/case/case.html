@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Case</h1>
+
+{% if request.user.id == case.owner.id %}
+<a href="{% url 'delete-case' case.id %}">刪除</a>&nbsp;&nbsp;
+<a href="{% url 'update-case' case.id %}">修改</a>  
+{% endif %}
+
 <ul>
     <li>[{{case.category}}]<b>{{case.title}}</b>(檢視次數:{{case.view}})</li>
     <li>上架日期:{{case.createdon|date:"Y/m/d"}}</li>
