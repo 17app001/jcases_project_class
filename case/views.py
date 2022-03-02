@@ -1,11 +1,10 @@
-import django
 from django.shortcuts import redirect, render
 from .models import Case, Category
 from user.models import City
 from .forms import CreateCaseForm
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from django.db.models import Q
+from .utils import search_cases,get_page_object,PAGE_NUM
 # Create your views here.
 
 def case(request,id):
@@ -79,38 +78,63 @@ def create_case(request):
     return render(request,'./case/create-case.html',{'form':form})
 
 def cases(request):
-    category_id,county_id,search=0,0,''
     categorys=Category.objects.all() 
     countys=City.objects.all()
 
+    category_id=request.COOKIES.get('category_id',0)
+    county_id=request.COOKIES.get('county_id',0)
+    search=request.COOKIES.get('search','').encode('iso-8859-1').decode('utf-8')
+
+    category_id=category_id if category_id==0 else eval(category_id)
+    county_id=county_id if county_id==0 else eval(county_id)
+
     if request.method=='GET':
-        cases = Case.objects.all()  
+        page_number = request.GET.get('page')
+        # cases = cases=search_cases(category_id,county_id,search)  
 
     if request.method=='POST':
+        page_number = 1
         category_id=eval(request.POST.get('category')) if request.POST.get('category') else 0
         county_id=eval(request.POST.get('county')) if request.POST.get('county') else 0      
         search=request.POST.get('search')
 
-        category_q=Q(category_id=category_id)
-        county_q= Q(owner__city_id=county_id)
-        search_q=Q(title__contains=search) | Q(description__contains=search)
+    cases=search_cases(category_id,county_id,search)
+ 
+      
+    page_num=PAGE_NUM
+    page_obj = get_page_object(cases,page_number,page_num)
 
-        print(category_q,county_q,search_q)
+    context={'cases': cases,'categorys':categorys,
+    'countys':countys,'category_id':category_id,
+    'county_id':county_id,'search':search,'page_obj': page_obj,'cases_length':len(cases)}
 
-        if category_id and county_id:
-            cases=Case.objects.filter(category_q & county_q & search_q) if search else\
-                 Case.objects.filter(category_q & county_q)       
-        elif category_id:
-            cases=Case.objects.filter(category_q & search_q) if search else\
-                Case.objects.filter(category_q)
-        elif county_id:
-            cases=Case.objects.filter(county_q & search_q) if search else\
-                Case.objects.filter(county_q)
-        elif search:
-             cases=Case.objects.filter(search_q)        
-        else:
-            cases = Case.objects.all()       
-    
-    print(cases)
-    return render(request, './case/cases.html', {'cases': cases,'categorys':categorys,
-    'countys':countys,'category_id':category_id,'county_id':county_id,'search':search})
+    response =render(request, './case/cases.html', context=context)
+
+    if request.method=='POST':
+        response.set_cookie('category_id',category_id)
+        response.set_cookie('county_id',county_id)
+        response.set_cookie('search',bytes(search,'utf-8').decode('iso-8859-1'))
+
+
+    return response
+
+
+def index(request):
+    categorys=Category.objects.all() 
+    countys=City.objects.all()
+    category_id,county_id,search=0,0,''
+    page_number = request.GET.get('page')
+    cases=search_cases(category_id,county_id,search)     
+    page_num=PAGE_NUM
+    page_obj = get_page_object(cases,page_number,page_num)
+
+    context={'cases': cases,'categorys':categorys,
+    'countys':countys,'category_id':category_id,
+    'county_id':county_id,'search':search,'page_obj': page_obj,'cases_length':len(cases)}
+
+    response =render(request, './case/cases.html', context=context)
+    response.delete_cookie('category_id')
+    response.delete_cookie('county_id')
+    response.delete_cookie('search')
+
+    return response

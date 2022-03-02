@@ -3,7 +3,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.cases,name='cases'),
+    path('', views.index,name='index'),
+    path('cases/',views.cases,name='cases'),
     path('create-case/', views.create_case,name='create-case'),
     path('case/<str:id>', views.case, name='case'),
     path('delete-case/<str:id>', views.delete_case, name='delete-case'),

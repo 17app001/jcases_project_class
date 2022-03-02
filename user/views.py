@@ -3,13 +3,18 @@ from django.contrib.auth import login, logout, authenticate
 from .models import Profile
 from .forms import ProfileForm
 from django.contrib.auth.decorators import login_required
+from case.utils import search_cases,get_page_object,PAGE_NUM
 # Create your views here.
 
 @login_required(login_url='login')
 def profile(request,id):
     user=Profile.objects.get(id=id)
+    cases=user.case_set.all()
+    page_num=PAGE_NUM
+    page_number = request.GET.get('page')
+    page_obj = get_page_object(cases,page_number,page_num)
        
-    response=render(request,'./user/profile.html',{'user':user})
+    response=render(request,'./user/profile.html',{'user':user,'page_obj':page_obj})
     response.set_cookie('page','profile')
 
     return response

@@ -16,6 +16,7 @@
 {% if user.case_set.all|length == 0 %}
 <h2>目前無發布專案</h2>
 {% else %}
+{% include 'pagination.html' %}
 <div id="cases-table">
     <table border="1">
         <thead>
@@ -30,7 +31,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for case in user.case_set.all %}
+            {% for case in page_obj %}
             <tr>
                 <td>{{case.createdon|date:"Y/m/d"}}</td>
                 <td>
