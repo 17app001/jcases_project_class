@@ -11,7 +11,7 @@ admin.site.register(Respondent)
 class ProfileAdmin(UserAdmin):
     model=Profile
     add_form=ProfileForm
-    filedsets=[
+    fieldsets=[
         *UserAdmin.fieldsets,
         [
             'User role',

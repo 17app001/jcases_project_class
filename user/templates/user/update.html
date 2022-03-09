@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Update</h1>
+<form action="" method="POST">
+    {% csrf_token %}
+    <div>
+        <label for="new-email">輸入新的Email:</label>
+        <input type="email" name="new-email" id="new-email" value="{{request.user.email}}">
+    </div>
+    <div>
+        請輸入新的居住地:({{request.user.city}})
+        <select name="city-id" id="city-id">
+            {% for city in citys %}
+            <option value="{{city.id}}">{{city}}</option>
+            {% endfor %}
+        </select>
+    </div>    
+    <div>
+        請輸入新的身分:({{request.user.respondent}})
+        {% for respondent in respondents %}
+        <input type="radio" name="respondent-id" id="respondent-id" value="{{respondent.id}}"
+        {% if user.respondent.id == respondent.id %}checked{% endif %}>
+        {{respondent}}
+        {% endfor %}      
+    </div>    
+    <div>
+        <button type="submit">更新</button>
+    </div>    
+</form>
+<div id="message">
+    {% if message %}
+    <p style="color:red">{{message}}</p>
+    {% endif %}
+</div>
+{% endblock %}

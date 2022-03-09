@@ -2,15 +2,18 @@
 {% block content %}
 <h1>Profile</h1>
 <ul>
-    <li>{{user.username}}</li>
+    <li>{{user.username}}({{user.city}})</li>
     <li>Email:{{user.email}}(認證:送100點)</li>
     <li>點數:{{user.point}}
         {% if not user.certification %}
         <a href="">認證</a>
         {% endif %}
     </li>
+    <li>
+        身分:{{user.respondent}}
+    </li>
 </ul>
-<a href="">資訊修改</a>
+<a href="{% url 'update' user.id %}">資訊修改</a>
 <a href="">點數儲值</a>
 
 {% if user.case_set.all|length == 0 %}

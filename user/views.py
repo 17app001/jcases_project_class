@@ -1,10 +1,43 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout, authenticate
-from .models import Profile
+from .models import City, Profile,Respondent
 from .forms import ProfileForm
 from django.contrib.auth.decorators import login_required
 from case.utils import search_cases,get_page_object,PAGE_NUM
 # Create your views here.
+
+@login_required(login_url='login')
+def user_update(request,id):
+    respondents=Respondent.objects.all()
+    user=Profile.objects.get(id=id)
+    citys=City.objects.all()
+    message=None
+
+    if request.method=='POST':
+        new_email=request.POST.get('new-email')
+        respondent_id=request.POST.get('respondent-id')
+        city_id=request.POST.get('city-id')
+
+        print(new_email,respondent_id)
+
+        if not new_email:
+            message='請輸入Email'
+        # Email不能重複(除非是本身的email)
+        elif not Profile.objects.filter(email=new_email) or user.email==new_email:
+            user.email=new_email
+            user.respondent=Respondent.objects.get(id=respondent_id)
+            user.city=City.objects.get(id=city_id)
+            user.save()
+            message='資料更新成功!'
+
+            return redirect('profile', id=user.id)
+
+        else:
+            message='Email已經註冊'
+
+    return render(request,'./user/update.html',{'respondents':respondents,'message':message,
+    'citys':citys})
+
 
 @login_required(login_url='login')
 def profile(request,id):
